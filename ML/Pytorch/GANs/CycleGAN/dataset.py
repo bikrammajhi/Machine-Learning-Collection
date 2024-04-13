@@ -3,38 +3,46 @@ import os
 from torch.utils.data import Dataset
 import numpy as np
 
-class HorseZebraDataset(Dataset):
-    def __init__(self, root_zebra, root_horse, transform=None):
-        self.root_zebra = root_zebra
-        self.root_horse = root_horse
+class ISICDataset(Dataset):
+    def __init__(self, datadir, csvpath, sketchdir, transform=None):
+        self.datadir = datadir
+        self.csv = pd.read_csv(csvpath)
+        self.sketchdir = sketchdir
         self.transform = transform
 
-        self.zebra_images = os.listdir(root_zebra)
-        self.horse_images = os.listdir(root_horse)
-        self.length_dataset = max(len(self.zebra_images), len(self.horse_images)) # 1000, 1500
-        self.zebra_len = len(self.zebra_images)
-        self.horse_len = len(self.horse_images)
-
     def __len__(self):
-        return self.length_dataset
+        return len(self.csv.index)
 
     def __getitem__(self, index):
-        zebra_img = self.zebra_images[index % self.zebra_len]
-        horse_img = self.horse_images[index % self.horse_len]
+        img_path = os.path.join(self.datadir, self.csv.iloc[index, 0] + ".jpg")
+        image = Image.open(img_path)
 
-        zebra_path = os.path.join(self.root_zebra, zebra_img)
-        horse_path = os.path.join(self.root_horse, horse_img)
+        labels = self.csv.iloc[index, 1:].values
+        label = np.argmax(labels, axis=0)
 
-        zebra_img = np.array(Image.open(zebra_path).convert("RGB"))
-        horse_img = np.array(Image.open(horse_path).convert("RGB"))
+        label = torch.tensor(label)
+
+        sketch_name = random.choice(os.listdir(self.sketchdir))
+        sketch_path = os.path.join(self.sketchdir, sketch_name)
+        fs, ext = os.path.splitext(sketch_path)
+
+        while ext not in ['.jpg', '.jpeg']:
+          sketch_name = random.choice(os.listdir(self.sketchdir))
+          sketch_path = os.path.join(self.sketchdir, sketch_name)
+          fs, ext = os.path.splitext(sketch_path)
+
+        sketch = Image.open(sketch_path)
 
         if self.transform:
-            augmentations = self.transform(image=zebra_img, image0=horse_img)
-            zebra_img = augmentations["image"]
-            horse_img = augmentations["image0"]
+            image = self.transform(image)
+            sketch = self.transform(sketch)
 
-        return zebra_img, horse_img
+        return label, image, sketch  
 
+transform = transforms.Compose([
+    transforms.Resize((64, 64)),
+    transforms.ToTensor()
+])
 
 
 
