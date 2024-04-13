@@ -145,14 +145,17 @@ def main():
             config.LEARNING_RATE,
         )
 
+    
     dataset = ISICDataset(
-        root_horse=config.TRAIN_DIR + "/Contours",
-        root_zebra=config.TRAIN_DIR + "/Train_data",
+        sketchdir=config.TRAIN_DIR + "/Contours",
+        datadir=config.TRAIN_DIR + "/Train_data",
+        csvpath=config.TRAIN_DIR + "/Train_labels.csv"
         transform=config.transforms,
     )
     val_dataset = ISICDataset(
-        root_horse= config.VAL_DIR + "Test_contours",
-        root_zebra= config.VAL_DIR + "Test",
+        sketchdir=config.VAL_DIR + "/Test_contours",
+        datadir=config.VAL_DIR + "/Test",
+        csvpath = config.VAL_DIR + "/Test_Labels.csv", 
         transform=config.transforms,
     )
     val_loader = DataLoader(
