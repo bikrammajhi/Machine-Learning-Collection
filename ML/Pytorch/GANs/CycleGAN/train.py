@@ -28,6 +28,7 @@ def train_fn(
     loop = tqdm(loader, leave=True)
 
     for idx, (zebra, horse) in enumerate(loop):
+        print(f"Traing started: {idx}")
         zebra = zebra.to(config.DEVICE)
         horse = horse.to(config.DEVICE)
 
