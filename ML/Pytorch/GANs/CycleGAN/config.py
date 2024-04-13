@@ -3,8 +3,8 @@ import albumentations as A
 from albumentations.pytorch import ToTensorV2
 
 DEVICE = "cuda" if torch.cuda.is_available() else "cpu"
-TRAIN_DIR = "/kaggle/input/isicdata/Assignment_4/Train/Train_data"
-VAL_DIR = "/kaggle/input/isicdata/Assignment_4/Test/Test"
+TRAIN_DIR = "/kaggle/input/isicdata/Assignment_4/Train"
+VAL_DIR = "/kaggle/input/isicdata/Assignment_4/Test"
 
 BATCH_SIZE = 1
 LEARNING_RATE = 1e-5
