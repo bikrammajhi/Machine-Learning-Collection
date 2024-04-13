@@ -7,7 +7,7 @@ Programmed by Aladdin Persson <aladdin.persson at hotmail dot com>
 """
 
 import torch
-from dataset import HorseZebraDataset
+from dataset import ISICDataset
 import sys
 from utils import save_checkpoint, load_checkpoint
 from torch.utils.data import DataLoader
@@ -145,14 +145,14 @@ def main():
             config.LEARNING_RATE,
         )
 
-    dataset = HorseZebraDataset(
-        root_horse=config.TRAIN_DIR + "/horses",
-        root_zebra=config.TRAIN_DIR + "/zebras",
+    dataset = ISICDataset(
+        root_horse=config.TRAIN_DIR + "/Contours",
+        root_zebra=config.TRAIN_DIR + "/Train_data",
         transform=config.transforms,
     )
-    val_dataset = HorseZebraDataset(
-        root_horse="cyclegan_test/horse1",
-        root_zebra="cyclegan_test/zebra1",
+    val_dataset = ISICDataset(
+        root_horse= config.VAL_DIR + "Test_contours",
+        root_zebra= config.VAL_DIR + "Test",
         transform=config.transforms,
     )
     val_loader = DataLoader(
