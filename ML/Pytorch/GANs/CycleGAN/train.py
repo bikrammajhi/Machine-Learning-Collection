@@ -149,7 +149,7 @@ def main():
     dataset = ISICDataset(
         sketchdir=config.TRAIN_DIR + "/Contours",
         datadir=config.TRAIN_DIR + "/Train_data",
-        csvpath=config.TRAIN_DIR + "/Train_labels.csv"
+        csvpath=config.TRAIN_DIR + "/Train_labels.csv",
         transform=config.transforms,
     )
     val_dataset = ISICDataset(
