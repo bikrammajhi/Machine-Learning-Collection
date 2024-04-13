@@ -1,6 +1,8 @@
 import torch
 import albumentations as A
 from albumentations.pytorch import ToTensorV2
+import torchvision.transforms as transforms
+
 
 DEVICE = "cuda" if torch.cuda.is_available() else "cpu"
 TRAIN_DIR = "/kaggle/input/isicdata/Assignment_4/Train"
