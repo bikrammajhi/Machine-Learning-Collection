@@ -19,6 +19,8 @@ from torchvision.utils import save_image
 from discriminator_model import Discriminator
 from generator_model import Generator
 
+from IPython.display import Image, display
+
 
 def train_fn(
     disc_H, disc_Z, gen_Z, gen_H, loader, opt_disc, opt_gen, l1, mse, d_scaler, g_scaler
@@ -52,6 +54,8 @@ def train_fn(
 
             # put it togethor
             D_loss = (D_H_loss + D_Z_loss) / 2
+
+            print("Discriminator Loss:", D_loss.item())
 
         opt_disc.zero_grad()
         d_scaler.scale(D_loss).backward()
@@ -88,6 +92,8 @@ def train_fn(
                 + identity_zebra_loss * config.LAMBDA_IDENTITY
             )
 
+            print("Generator Loss:", G_loss.item())
+            
         opt_gen.zero_grad()
         g_scaler.scale(G_loss).backward()
         g_scaler.step(opt_gen)
@@ -96,6 +102,10 @@ def train_fn(
         if idx % 200 == 0:
             save_image(fake_horse * 0.5 + 0.5, f"saved_images/horse_{idx}.png")
             save_image(fake_zebra * 0.5 + 0.5, f"saved_images/zebra_{idx}.png")
+
+            # Display the images
+            display(Image(filename="saved_images/horse.png"))
+            display(Image(filename="saved_images/zebra.png"))
 
         loop.set_postfix(H_real=H_reals / (idx + 1), H_fake=H_fakes / (idx + 1))
 
