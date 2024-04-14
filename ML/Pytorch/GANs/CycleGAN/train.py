@@ -157,12 +157,26 @@ def main():
         )
 
     
-    dataset = ISICDataset(
+    import random
+    from torch.utils.data import Subset
+
+    # Load the entire dataset
+    full_dataset = ISICDataset(
         sketchdir=config.TRAIN_DIR + "/Contours",
         datadir=config.TRAIN_DIR + "/Train_data",
         csvpath=config.TRAIN_DIR + "/Train_labels.csv",
         transform=config.transforms,
     )
+
+    # Calculate the number of samples to keep (5% of the total)
+    num_samples = int(0.05 * len(full_dataset))
+    
+    # Generate random indices to select 5% of the data
+    random_indices = random.sample(range(len(full_dataset)), num_samples)
+    
+    # Create a subset dataset containing only the selected samples
+    subset_dataset = Subset(full_dataset, random_indices)
+
     val_dataset = ISICDataset(
         sketchdir=config.VAL_DIR + "/Test_contours",
         datadir=config.VAL_DIR + "/Test",
@@ -176,7 +190,7 @@ def main():
         pin_memory=True,
     )
     loader = DataLoader(
-        dataset,
+        subset_dataset,
         batch_size=config.BATCH_SIZE,
         shuffle=True,
         num_workers=config.NUM_WORKERS,
