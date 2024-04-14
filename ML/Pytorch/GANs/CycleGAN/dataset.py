@@ -42,7 +42,7 @@ class ISICDataset(Dataset):
             image = self.transform(image)
             sketch = self.transform(sketch)
 
-        return label, image, sketch  
+        return image, sketch   #label, 
 
 transform = transforms.Compose([
     transforms.Resize((64, 64)),
